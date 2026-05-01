@@ -1,5 +1,8 @@
-import { X, MapPin, AlertTriangle, Clock, Building2, Share2, Calendar } from 'lucide-react'
+import { useState } from 'react'
+import { X, MapPin, AlertTriangle, Clock, Building2, Share2, Calendar, FileText } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import PressureCard from './PressureCard'
+import RTIGenerator from './RTIGenerator'
 
 const severityConfig = (s) => {
   if (s >= 4) return { label: 'Critical', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/20' }
@@ -25,6 +28,7 @@ const statusConfig = (s) => {
 function DetailPanel({ issue, onClose }) {
   const severity = severityConfig(issue.severity)
   const status = statusConfig(issue.status)
+  const [showPressureCard, setShowPressureCard] = useState(false)
   const days = issue.days || Math.floor(
     (Date.now() - new Date(issue.created_at)) / 86400000
   )
@@ -158,12 +162,34 @@ function DetailPanel({ issue, onClose }) {
 
           {/* Share button */}
           <button
-            onClick={handleShare}
-            className="w-full flex items-center justify-center gap-2 bg-[#1a2235] hover:bg-[#243050] border border-[#2a3447] text-white/60 hover:text-white py-3 rounded-xl transition-all duration-200 text-sm"
+            onClick={() => setShowPressureCard(true)}
+            className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl transition-all duration-200 text-sm font-semibold"
           >
             <Share2 size={15} />
-            Share this Issue
+            🚨 Create Pressure Card
           </button>
+
+          <button
+            onClick={() => setShowRTI(true)}
+            className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl transition-all duration-200 text-sm font-semibold"
+          >
+            <FileText size={15} />
+            📋 Generate RTI Application
+          </button>
+
+          {showPressureCard && (
+            <PressureCard
+              issue={issue}
+              onClose={() => setShowPressureCard(false)}
+            />
+          )}
+
+          {showRTI && (
+            <RTIGenerator
+              issue={issue}
+              onClose={() => setShowRTI(false)}
+            />
+          )}
 
         </div>
       </motion.div>
