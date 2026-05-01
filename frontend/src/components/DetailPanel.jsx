@@ -29,6 +29,7 @@ function DetailPanel({ issue, onClose }) {
   const severity = severityConfig(issue.severity)
   const status = statusConfig(issue.status)
   const [showPressureCard, setShowPressureCard] = useState(false)
+  const [showRTI, setShowRTI] = useState(false)
   const days = issue.days || Math.floor(
     (Date.now() - new Date(issue.created_at)) / 86400000
   )
